@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equipos · Préstamos de material informático</title>
+</head>
+<body>
+  <header>
+    <h1>Equipos</h1>
+  </header>
+  <main>
+    <form method="get" action="/equipos">
+      <label>Nombre
+        <input type="search" name="q" value="<%= filtros.q %>" maxlength="100">
+      </label>
+      <label>Categoría
+        <select name="categoria">
+          <option value="">Todas</option>
+          <% categorias.forEach((c) => { %>
+            <option value="<%= c %>" <%= filtros.categoria === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Estado
+        <select name="disponibilidad">
+          <option value="">Todos</option>
+          <option value="disponible" <%= filtros.disponibilidad === 'disponible' ? 'selected' : '' %>>Disponible</option>
+          <option value="prestado" <%= filtros.disponibilidad === 'prestado' ? 'selected' : '' %>>Prestado</option>
+        </select>
+      </label>
+      <label>Ordenar por
+        <select name="orden">
+          <option value="codigo" <%= filtros.orden === 'codigo' ? 'selected' : '' %>>Código</option>
+          <option value="nombre" <%= filtros.orden === 'nombre' ? 'selected' : '' %>>Nombre</option>
+        </select>
+      </label>
+      <button type="submit">Filtrar</button>
+      <a href="/equipos">Limpiar</a>
+    </form>
+
+    <% if (equipos.length === 0) { %>
+      <p><strong>No se han encontrado equipos con los filtros indicados.</strong></p>
+    <% } else { %>
+      <p><%= total %> equipo(s) encontrado(s).</p>
+      <table>
+        <caption>Listado de equipos</caption>
+        <thead>
+          <tr><th scope="col">Código</th><th scope="col">Nombre</th><th scope="col">Categoría</th><th scope="col">Estado</th></tr>
+        </thead>
+        <tbody>
+          <% equipos.forEach((e) => { %>
+            <tr>
+              <td><a href="/equipos/<%= e.id %>"><%= e.codigo %></a></td>
+              <td><%= e.nombre %></td>
+              <td><%= e.categoria %></td>
+              <td><%= e.disponible ? 'Disponible' : 'Prestado' %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <nav aria-label="Paginación">
+        <% if (pagina > 1) { %><a href="<%= enlace(pagina - 1) %>">&laquo; Anterior</a><% } %>
+        <span>Página <%= pagina %> de <%= totalPaginas %></span>
+        <% if (pagina < totalPaginas) { %><a href="<%= enlace(pagina + 1) %>">Siguiente &raquo;</a><% } %>
+      </nav>
+    <% } %>
+  </main>
+</body>
+</html>

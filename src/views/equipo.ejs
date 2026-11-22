@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= equipo.codigo %> · Detalle de equipo</title>
+</head>
+<body>
+  <%
+    const fmt = (f) => f ? new Date(f).toLocaleString('es-ES', { timeZone: 'Europe/Madrid' }) : '—';
+  %>
+  <header>
+    <p><a href="/equipos">&laquo; Volver al listado</a></p>
+    <h1><%= equipo.nombre %></h1>
+  </header>
+  <main>
+    <section>
+      <h2>Datos del equipo</h2>
+      <dl>
+        <dt>Código</dt><dd><%= equipo.codigo %></dd>
+        <dt>Categoría</dt><dd><%= equipo.categoria %></dd>
+        <dt>Estado</dt><dd><%= equipo.disponible ? 'Disponible' : 'Prestado' %></dd>
+        <% if (equipo.usuario_actual) { %>
+          <dt>Prestado a</dt><dd><%= equipo.usuario_actual %> (desde <%= fmt(equipo.fecha_prestamo) %>)</dd>
+        <% } %>
+      </dl>
+    </section>
+
+    <section>
+      <h2>Historial de préstamos</h2>
+      <% if (historial.length === 0) { %>
+        <p>Este equipo todavía no tiene préstamos registrados.</p>
+      <% } else { %>
+        <table>
+          <thead>
+            <tr><th scope="col">Nº</th><th scope="col">Usuario</th><th scope="col">Préstamo</th><th scope="col">Devolución</th></tr>
+          </thead>
+          <tbody>
+            <% historial.forEach((p) => { %>
+              <tr>
+                <td><%= p.id %></td>
+                <td><%= p.usuario %></td>
+                <td><%= fmt(p.fecha_prestamo) %></td>
+                <td><%= p.fecha_devolucion ? fmt(p.fecha_devolucion) : 'Pendiente' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  </main>
+</body>
+</html>
